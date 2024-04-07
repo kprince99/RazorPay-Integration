@@ -1,9 +1,11 @@
-require('dotenv').config({path: './.env'});
-import { Router } from 'express';
-import Razorpay from 'razorpay';
-import { createHmac } from 'crypto';
+const test = require('dotenv').config({path: './.env'});
+const express = require('express');
+const Razorpay = require('razorpay');
+const crypto = require('crypto');
 
-const router = Router();
+console.log(test);
+
+const router = express.Router();
 
 router.post('/orders', async (req, res) => {
   const { inputAmount } = req.body;
@@ -39,7 +41,7 @@ router.post('/success', async (req, res) => {
       razorpaySignature,
     } = req.body;
 
-    const shasum = createHmac('sha256', '1fBRi1UpFDacmQUpl7W8lPcc');
+    const shasum = crypto.createHmac('sha256', process.env.RAZORPAY_SECRET);
     shasum.update(`${orderCreationId}|${razorpayPaymentId}`);
     const digest = shasum.digest('hex');
 
@@ -56,4 +58,4 @@ router.post('/success', async (req, res) => {
   }
 });
 
-export default router;
+module.exports = router;

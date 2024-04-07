@@ -2,9 +2,8 @@
     "name": "razorpay-test",
     "version": "1.0.0",
     "description": "",
-    "main": "server.js",
     "scripts": {
-        "server": "nodemon api/server.js",
+        "server": "nodemon run start --prefix server",
         "client": "npm run start --prefix client",
         "dev": "concurrently \"npm run server\" \"npm run client\""
     },
