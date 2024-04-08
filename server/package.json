@@ -1,0 +1,21 @@
+{
+    "name": "razorpay-test",
+    "version": "1.0.0",
+    "description": "",
+    "scripts": {
+        "server": "nodemon run start",
+        "dev": "concurrently \"npm run server\" \"npm run client\""
+    },
+    "author": "Shivani Sahu",
+    "license": "MIT",
+    "dependencies": {
+        "crypto": "^1.0.1",
+        "dotenv": "^8.6.0",
+        "express": "^4.17.1",
+        "mongoose": "^5.10.5",
+        "razorpay": "^2.0.6"
+    },
+    "devDependencies": {
+        "concurrently": "^5.3.0"
+    }
+}
