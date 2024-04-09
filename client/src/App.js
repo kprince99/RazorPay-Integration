@@ -1,11 +1,26 @@
-import React, { useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import logo from "./logo.svg";
 import "./App.css";
 import axios from "axios";
 
 function App() {
   const [inputAmount, setInputAmount] = useState("");
+  const [error, setError] = useState("");
 
+  function handleChange(event) {
+    setInputAmount(event.target.value);
+
+    if (!inputAmount || inputAmount === "") {
+      setError("");
+    }
+    if (inputAmount > 5000) {
+      setError("No Amount can be greater than 5000");
+    } else if (inputAmount < 100) {
+      setError("No Amount can be less than 100");
+    }
+  }
+
+  console.log(inputAmount);
   function loadScript(src) {
     return new Promise((resolve) => {
       const script = document.createElement("script");
@@ -29,8 +44,8 @@ function App() {
       alert("Razorpay SDK failed to load. Are you online?");
       return;
     }
-    
-    const result = await axios.post("/payment/orders", { inputAmount } );
+
+    const result = await axios.post("/payment/orders", { inputAmount });
 
     if (!result) {
       alert("Server error. Are you online?");
@@ -40,7 +55,7 @@ function App() {
     const { amount, id: order_id, currency } = result.data;
 
     const options = {
-      key: "rzp_test_SC54rSSO88X9vT", // Enter the Key ID generated from the Dashboard
+      key: "rzp_test_zyDAc5RTXVOynq", // Enter the Key ID generated from the Dashboard
       amount: amount.toString(),
       currency: currency,
       name: "E-commerce Corp.",
@@ -77,15 +92,46 @@ function App() {
   }
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <input className="App-link" type="text" placeholder="Enter amount" onChange={(e) => setInputAmount(e.target.value)}/>
-        <br />
-        <button className="App-link" onClick={displayRazorpay}>
-          Pay Now
-        </button>
-      </header>
-    </div>
+    <>
+      <div className="container">
+        <div className="outerPart">
+          <div className="upper-header">
+            <h2>Topup</h2>
+          </div>
+          <div className="user-details">
+            <div className="accDetails">
+              <span>Account Number</span>
+              <span>4675&nbsp;3389&nbsp;7089</span>
+            </div>
+            <div className="accDetails">
+              <span>Amount</span>
+              <span>400</span>
+            </div>
+          </div>
+          <div className="order-details">
+            <p className="heading">Amount to Pay</p>
+            <div className="amount">
+              <i className="rupees-sign">₹</i>
+              <input
+                className="paymentLink"
+                type="number"
+                max="5000"
+                min="100"
+                placeholder=""
+                onChange={handleChange}
+              />
+            </div>
+          </div>
+
+          {error && <span className="error">{error}</span>}
+
+          <br />
+          <button className="App-Button" onClick={displayRazorpay}>
+            Proceed to payment
+          </button>
+        </div>
+      </div>
+    </>
   );
 }
 
