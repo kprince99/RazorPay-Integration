@@ -51,7 +51,7 @@ function App() {
       return;
     }
 
-    const result = await axios.get("/payment/orders", { inputAmount });
+    const result = await axios.post("/payment/orders", { inputAmount });
 
 
     if (!result) {
@@ -79,7 +79,7 @@ function App() {
           razorpaySignature: response.razorpay_signature,
         };
 
-        const result = await axios.get("/payment/success", data);
+        const result = await axios.post("/payment/success", data);
 
         if (result.data.msg === "success") {
           setSetPayment(true);
