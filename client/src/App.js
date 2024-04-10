@@ -59,8 +59,8 @@ function App() {
       return;
     }
 
-    console.log("this is result", result);
-    
+    console.log("this is result", result.data);
+
     const { amount, id: order_id, currency } = result;
 
     const options = {
