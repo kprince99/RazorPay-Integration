@@ -53,7 +53,7 @@ router.get('/success', async (req, res) => {
       razorpayPaymentId,
       razorpayOrderId,
       razorpaySignature,
-    } = req.body;
+    } = req.query;
 
     const shasum = crypto.createHmac('sha256', process.env.RAZORPAY_SECRET);
     shasum.update(`${orderCreationId}|${razorpayPaymentId}`);
