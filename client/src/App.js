@@ -51,7 +51,9 @@ function App() {
       return;
     }
 
-    const result = await axios.post("/payment/orders", { inputAmount });
+    const result = await axios.post("/payment/orders", { 
+      amount: inputAmount 
+    });
 
 
     if (!result) {
@@ -59,9 +61,7 @@ function App() {
       return;
     }
 
-    console.log("this is result", result.data);
-
-    const { amount, id: order_id, currency } = result;
+    const { amount, id: order_id, currency } = result.data;
 
     const options = {
       key: "rzp_test_zyDAc5RTXVOynq", // Enter the Key ID generated from the Dashboard

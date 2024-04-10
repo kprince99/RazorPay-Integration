@@ -2,25 +2,20 @@ const test = require('dotenv').config()
 const express = require('express');
 const Razorpay = require('razorpay');
 const crypto = require('crypto');
-
-console.log(test);
+const bodyParser = require('body-parser');
 
 const router = express.Router();
+
+const app = express();
+app.use(bodyParser.json());
 
 router.get('/', (req, res) => {
   res.json({ status: '200', message: 'Payment route reached!' });
 });
 
-router.get('/options', async (req, res) => {
-  const {amount} = req.query;
-  res.json({ 
-    amount: amount,  
-    status: '200', 
-    message: 'Testing options only (for refrence)!' });
-});
-
 router.post('/orders', async (req, res) => {
-  const { inputAmount } = req.query;
+  console.log(req.body);
+  const { amount } = req.body;
 
   try {
     const instance = new Razorpay({
@@ -29,7 +24,7 @@ router.post('/orders', async (req, res) => {
     });
 
     const options = {
-      amount: inputAmount * 100,
+      amount: amount * 100,
       currency: 'INR',
       receipt: 'receipt_order_74394',
     };
@@ -53,7 +48,7 @@ router.post('/success', async (req, res) => {
       razorpayPaymentId,
       razorpayOrderId,
       razorpaySignature,
-    } = req.query;
+    } = req.body;
 
     const shasum = crypto.createHmac('sha256', process.env.RAZORPAY_SECRET);
     shasum.update(`${orderCreationId}|${razorpayPaymentId}`);
