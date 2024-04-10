@@ -62,7 +62,7 @@ function App() {
 
     const options = {
       key: "rzp_test_zyDAc5RTXVOynq", // Enter the Key ID generated from the Dashboard
-      amount: amount.toString(),
+      amount: amount ? amount.toString() : "",
       currency: currency,
       name: "E-commerce Corp.",
       description: "Test Transaction",
