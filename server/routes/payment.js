@@ -29,7 +29,7 @@ router.get('/orders', async (req, res) => {
     });
 
     const options = {
-      amount: int(inputAmount.toString() * 100),
+      amount: int(inputAmount * 100),
       currency: 'INR',
       receipt: 'receipt_order_74394',
     };
