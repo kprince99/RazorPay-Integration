@@ -1,8 +1,15 @@
 "use strict"
 const express = require('express');
-
+const cors = require('cors');
 const app = express();
 const port = process.env.PORT || 5000;
+
+const corsOptions = {
+  origin: process.env.REACT_APP_WEBSITE_BASE_URL,
+  optionsSuccessStatus: 200,
+}
+
+app.use(cors(corsOptions));
 
                                             
 // middlewares
