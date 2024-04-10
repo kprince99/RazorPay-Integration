@@ -11,12 +11,16 @@ router.get('/', (req, res) => {
   res.json({ status: '200', message: 'Payment route reached!' });
 });
 
-router.get('/options', (req, res) => {
-  res.json({ status: '200', message: 'Testing options only (for refrence)!' });
+router.get('/options', async (req, res) => {
+  const {amount} = req.query;
+  res.json({ 
+    amount: amount,  
+    status: '200', 
+    message: 'Testing options only (for refrence)!' });
 });
 
-router.post('/orders', async (req, res) => {
-  const { inputAmount } = req.body;
+router.get('/orders', async (req, res) => {
+  const { inputAmount } = req.query;
 
   try {
     const instance = new Razorpay({
@@ -32,7 +36,9 @@ router.post('/orders', async (req, res) => {
 
     const order = await instance.orders.create(options);
 
-    if (!order) return res.status(500).send('Some error occured');
+    if (!order) {
+    return res.status(500).send('Some error occured');
+    }
 
     res.json(order);
   } catch (error) {
@@ -40,7 +46,7 @@ router.post('/orders', async (req, res) => {
   }
 });
 
-router.post('/success', async (req, res) => {
+router.get('/success', async (req, res) => {
   try {
     const {
       orderCreationId,

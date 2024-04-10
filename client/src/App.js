@@ -51,7 +51,7 @@ function App() {
       return;
     }
 
-    const result = await axios.post("/payment/orders", { inputAmount });
+    const result = await axios.get("/payment/orders", { inputAmount });
 
     if (!result) {
       alert("Server error. Are you online?");
@@ -76,7 +76,7 @@ function App() {
           razorpaySignature: response.razorpay_signature,
         };
 
-        const result = await axios.post("/payment/success", data);
+        const result = await axios.get("/payment/success", data);
 
         if (result.data.msg === "success") {
           setSetPayment(true);
@@ -99,9 +99,6 @@ function App() {
     const paymentObject = new window.Razorpay(options);
     paymentObject.open();
   }
-
-  console.log(inputAmount, initialMoney);
-
   return (
     <>
       <div className="container">
