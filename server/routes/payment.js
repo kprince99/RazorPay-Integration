@@ -19,7 +19,7 @@ router.get('/options', async (req, res) => {
     message: 'Testing options only (for refrence)!' });
 });
 
-router.get('/orders', async (req, res) => {
+router.post('/orders', async (req, res) => {
   const { inputAmount } = req.query;
 
   try {
@@ -46,7 +46,7 @@ router.get('/orders', async (req, res) => {
   }
 });
 
-router.get('/success', async (req, res) => {
+router.post('/success', async (req, res) => {
   try {
     const {
       orderCreationId,
