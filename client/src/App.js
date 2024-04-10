@@ -58,7 +58,7 @@ function App() {
       return;
     }
 
-    const { amount, id: order_id, currency } = result.data;
+    const { amount, id: order_id, currency } = result;
 
     const options = {
       key: "rzp_test_zyDAc5RTXVOynq", // Enter the Key ID generated from the Dashboard
