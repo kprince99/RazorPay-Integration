@@ -1,26 +1,32 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import logo from "./logo.svg";
+import HeaderLogo from "./logo.png";
+import PaymentSuccess from './tick-right.jpg';
 import "./App.css";
 import axios from "axios";
 
 function App() {
-  const [inputAmount, setInputAmount] = useState("");
+  const [initialMoney, setMoney] = useState(4000);
+  const [inputAmount, setInputAmount] = useState(0);
   const [error, setError] = useState("");
+  const [setPayment, setSetPayment] = useState(false);
 
-  function handleChange(event) {
-    setInputAmount(event.target.value);
-
-    if (!inputAmount || inputAmount === "") {
+  useEffect(() => {
+    if (!inputAmount) {
+      setError("");
+    } else if (inputAmount > 5000) {
+      setError("Amount can't be greater than 5000");
+    } else if (inputAmount < 1) {
+      setError("Amount can't be less than 1");
+    } else {
       setError("");
     }
-    if (inputAmount > 5000) {
-      setError("No Amount can be greater than 5000");
-    } else if (inputAmount < 100) {
-      setError("No Amount can be less than 100");
-    }
-  }
+  }, [inputAmount, initialMoney]);
 
-  console.log(inputAmount);
+  const handleChange = (event) => {
+    setInputAmount(event.target.value);
+  };
+
   function loadScript(src) {
     return new Promise((resolve) => {
       const script = document.createElement("script");
@@ -72,18 +78,21 @@ function App() {
 
         const result = await axios.post("/payment/success", data);
 
-        alert(result.data.msg);
+        if (result.data.msg === "success") {
+          setSetPayment(true);
+          setMoney(initialMoney - inputAmount);
+        }
       },
       prefill: {
         name: "Shivani Sahu",
-        email: "test@exmaple.com",
+        email: "shivani@test.com",
         contact: "+91 8788787768",
       },
       notes: {
         address: "E-commerce Corporate Office",
       },
       theme: {
-        color: "#61dafb",
+        color: "#4435b1",
       },
     };
 
@@ -91,44 +100,81 @@ function App() {
     paymentObject.open();
   }
 
+  console.log(inputAmount, initialMoney);
+
   return (
     <>
       <div className="container">
         <div className="outerPart">
-          <div className="upper-header">
-            <h2>Topup</h2>
-          </div>
-          <div className="user-details">
-            <div className="accDetails">
-              <span>Account Number</span>
-              <span>4675&nbsp;3389&nbsp;7089</span>
+          {setPayment ? (
+            <div className="payment-done">
+              <img src={PaymentSuccess} width={100} height={100} alt="logo" />
+              <h3>Payment Done</h3>
+              <p>Your payment has been successfully processed.</p>
             </div>
-            <div className="accDetails">
-              <span>Amount</span>
-              <span>400</span>
-            </div>
-          </div>
-          <div className="order-details">
-            <p className="heading">Amount to Pay</p>
-            <div className="amount">
-              <i className="rupees-sign">₹</i>
-              <input
-                className="paymentLink"
-                type="number"
-                max="5000"
-                min="100"
-                placeholder=""
-                onChange={handleChange}
-              />
-            </div>
-          </div>
+          ) : (
+            <>
+              <div className="upper-header">
+                <img
+                  src={HeaderLogo}
+                  width="100%"
+                  height="100%"
+                  alt="logo"
+                  className="logo"
+                />
+              </div>
+              <div className="to">
+                <span>To</span>
+                <div className="sender-part">
+                  <div className="sender-details">
+                    <img
+                      src={logo}
+                      width="40px"
+                      height="40px"
+                      alt="logo"
+                      className="senderLogo"
+                    />
+                    <p className="senderName">E-Commerce Corp</p>
+                  </div>
+                </div>
+              </div>
+              <div className="order-details">
+                <p className="heading">Amount to Pay</p>
+                <div className="amount">
+                  <i className="rupees-sign">₹</i>
+                  <input
+                    className="paymentLink"
+                    type="number"
+                    max="5000"
+                    min="100"
+                    placeholder=""
+                    onChange={handleChange}
+                  />
+                </div>
+              </div>
 
-          {error && <span className="error">{error}</span>}
+              {error && <span className="error">{error}</span>}
 
-          <br />
-          <button className="App-Button" onClick={displayRazorpay}>
-            Proceed to payment
-          </button>
+              <div className="user-details">
+                <div className="accDetails">
+                  <span>Account Number</span>
+                  <span>4675&nbsp;3389&nbsp;7089</span>
+                </div>
+                <div className="accDetails">
+                  <span>Amount</span>
+                  <span>{initialMoney}</span>
+                </div>
+              </div>
+
+              <button
+                className="App-Button"
+                disabled={inputAmount > 5000 || inputAmount < 1 ? true : false}
+                onClick={displayRazorpay}
+              >
+                Proceed to payment
+              </button>
+            </>
+          )}
         </div>
       </div>
     </>
