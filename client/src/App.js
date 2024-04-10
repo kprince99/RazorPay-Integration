@@ -151,9 +151,8 @@ function App() {
                     onChange={handleChange}
                   />
                 </div>
-              </div>
-
               {error && <span className="error">{error}</span>}
+              </div>
 
               <div className="user-details">
                 <div className="accDetails">
