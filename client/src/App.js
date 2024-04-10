@@ -53,11 +53,14 @@ function App() {
 
     const result = await axios.get("/payment/orders", { inputAmount });
 
+
     if (!result) {
       alert("Server error. Are you online?");
       return;
     }
 
+    console.log("this is result", result);
+    
     const { amount, id: order_id, currency } = result;
 
     const options = {
