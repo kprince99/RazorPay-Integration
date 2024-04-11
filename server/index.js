@@ -21,6 +21,6 @@ app.get('/', (req, res) => res.send({
   message: 'Server is running!',
 }));
 
-app.use(BASE_URL + '/payment', require('./routes/payment'));
+app.use('/payment', require('./routes/payment'));
 
 app.listen(port, () => console.log(`server started on port ${port}`));
