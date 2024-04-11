@@ -6,11 +6,20 @@ const app = express();
 
 const port = process.env.PORT || 5000;
 
+const whitelist = ['http://localhost:3000', process.env.REACT_APP_WEBSITE_BASE_URL];
+
+app.options('*', cors());
+
 const corsOptions = {
-  origin: process.env.REACT_APP_WEBSITE_BASE_URL,
   credentials: true,
-  optionsSuccessStatus: 200
-}
+  origin: (origin, callback) => {
+    if (whitelist.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+};
 
 app.use(cors(corsOptions));
                                          
