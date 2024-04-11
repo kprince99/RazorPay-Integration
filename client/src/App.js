@@ -5,6 +5,8 @@ import PaymentSuccess from './tick-right.jpg';
 import "./App.css";
 import axios from "axios";
 
+
+const BASE_URL = 'https://razor-pay-integration.vercel.app'
 function App() {
   const [initialMoney, setMoney] = useState(4000);
   const [inputAmount, setInputAmount] = useState(0);
@@ -51,7 +53,7 @@ function App() {
       return;
     }
 
-    const result = await axios.post("/payment/orders", { 
+    const result = await axios.post(BASE_URL + "/payment/orders", { 
       amount: inputAmount 
     });
 
@@ -79,7 +81,7 @@ function App() {
           razorpaySignature: response.razorpay_signature,
         };
 
-        const result = await axios.post("/payment/success", data);
+        const result = await axios.post(BASE_URL + "/payment/success", data);
 
         if (result.data.msg === "success") {
           setSetPayment(true);
