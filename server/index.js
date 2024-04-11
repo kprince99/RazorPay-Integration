@@ -4,6 +4,8 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const app = express();
 
+const BASE_URL = 'https://razor-pay-integration-sr2r.vercel.app/';
+
 const port = process.env.PORT || 5000;
 
 const corsOptions = {
@@ -21,6 +23,6 @@ app.get('/', (req, res) => res.send({
   message: 'Server is running!',
 }));
 
-app.use('/payment', require('./routes/payment'));
+app.use(BASE_URL + '/payment', require('./routes/payment'));
 
 app.listen(port, () => console.log(`server started on port ${port}`));
