@@ -8,6 +8,7 @@ const port = process.env.PORT || 5000;
 
 const corsOptions = {
   origin: process.env.REACT_APP_WEBSITE_BASE_URL,
+  credentials: true,
   optionsSuccessStatus: 200
 }
 
