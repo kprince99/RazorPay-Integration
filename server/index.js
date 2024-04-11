@@ -6,7 +6,7 @@ const app = express();
 
 const port = process.env.PORT || 5000;
 
-const whitelist = ['http://localhost:3000', process.env.REACT_APP_WEBSITE_BASE_URL];
+const whitelist = ['http://localhost:3000', process.env.WEBSITE_BASE_URL];
 
 app.options('*', cors());
 
