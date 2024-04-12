@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from "react";
 import logo from "./logo.svg";
 import HeaderLogo from "./logo.png";
-import PaymentSuccess from './tick-right.jpg';
+import PaymentSuccess from "./tick-right.png";
 import "./App.css";
 import axios from "axios";
 
-
-const BASE_URL = 'https://razor-pay-integration.vercel.app'
+const BASE_URL = "https://razor-pay-integration.vercel.app";
 function App() {
   const [initialMoney, setMoney] = useState(4000);
   const [inputAmount, setInputAmount] = useState(0);
   const [error, setError] = useState("");
   const [setPayment, setSetPayment] = useState(false);
+  const [buttonColor, setButtonColor] = useState("#0c359e");
+  const [isButtonDisabled, setButtonDisabled] = useState(false);
+  const [id, setId] = useState({ paymentID: "", orderID: "" });
 
   useEffect(() => {
     if (!inputAmount) {
@@ -44,26 +46,32 @@ function App() {
   }
 
   async function displayRazorpay() {
+    setButtonColor("#5378d6");
+    setButtonDisabled(true);
+
     const res = await loadScript(
       "https://checkout.razorpay.com/v1/checkout.js"
     );
 
     if (!res) {
       alert("Razorpay SDK failed to load. Are you online?");
+      setButtonColor("#5378d6");
+      setButtonDisabled(false);
       return;
     }
 
-    const result = await axios.post(BASE_URL + "/payment/orders", { 
-      amount: inputAmount 
+    const result = await axios.post(BASE_URL + "/payment/orders", {
+      amount: inputAmount,
     });
-
 
     if (!result) {
       alert("Server error. Are you online?");
+      setButtonColor("#5378d6");
+      setButtonDisabled(false);
       return;
     }
 
-    const { amount, id: order_id, currency } = result.data;
+    const { created_at, amount, id: order_id, currency } = result.data;
 
     const options = {
       key: "rzp_test_zyDAc5RTXVOynq", // Enter the Key ID generated from the Dashboard
@@ -73,6 +81,7 @@ function App() {
       description: "Test Transaction",
       image: { logo },
       order_id: order_id,
+      order_date: created_at,
       handler: async function (response) {
         const data = {
           orderCreationId: order_id,
@@ -86,6 +95,11 @@ function App() {
         if (result.data.msg === "success") {
           setSetPayment(true);
           setMoney(initialMoney - inputAmount);
+          setId((prevState) => ({
+            ...prevState,
+            paymentID: result.data.paymentId,
+            orderID: result.data.orderId,
+          }));
         }
       },
       prefill: {
@@ -107,12 +121,34 @@ function App() {
   return (
     <>
       <div className="container">
-        <div className="outerPart">
+        <div className={`outerPart`}>
           {setPayment ? (
             <div className="payment-done">
               <img src={PaymentSuccess} width={100} height={100} alt="logo" />
-              <h3>Payment Done</h3>
-              <p>Your payment has been successfully processed.</p>
+              <h3>Order Payment Successful</h3>
+              <p>
+                Your payment has been processed! <br />
+                Details of transaction are included below.
+              </p>
+
+              <div className="line"></div>
+              <span className="transaction-data">
+                Transaction Number: {id.paymentID}
+              </span>
+              <div className="Payment_Status">
+                <div className="Payment_Status_inner">
+                  <span className="inner_details">Total Amount Paid</span>
+                  <p>{inputAmount}</p>
+                </div>
+                <div className="Payment_Status_inner">
+                <span className="inner_details">Order ID</span>
+                  <p>{id.orderID}</p>
+                </div>
+                <div className="Payment_Status_inner">
+                <span className="inner_details">Available Balance</span>
+                  <p>{initialMoney}</p>
+                </div>
+              </div>
             </div>
           ) : (
             <>
@@ -153,7 +189,7 @@ function App() {
                     onChange={handleChange}
                   />
                 </div>
-              {error && <span className="error">{error}</span>}
+                {error && <span className="error">{error}</span>}
               </div>
 
               <div className="user-details">
@@ -169,8 +205,13 @@ function App() {
 
               <button
                 className="App-Button"
-                disabled={inputAmount > 5000 || inputAmount < 1 ? true : false}
+                disabled={
+                  isButtonDisabled || inputAmount > 5000 || inputAmount < 1
+                    ? true
+                    : false
+                }
                 onClick={displayRazorpay}
+                style={{ backgroundColor: buttonColor }}
               >
                 Proceed to payment
               </button>
