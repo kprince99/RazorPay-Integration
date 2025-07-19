@@ -5,8 +5,8 @@ const bodyParser = require('body-parser');
 const app = express();
 
 const port = process.env.PORT || 5000;
-
-const whitelist = ['http://localhost:3000', process.env.WEBSITE_BASE_URL];
+// Add more if required
+const whitelist = [ process.env.WEBSITE_BASE_URL];
 
 app.options('*', cors());
 
